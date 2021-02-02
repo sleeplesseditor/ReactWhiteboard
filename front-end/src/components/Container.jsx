@@ -16,7 +16,7 @@ const Container = () => {
     return (
         <div className="container">
             <div className="tools-section">
-                <div className="color-picker-container">
+                <div className="colour-picker-container">
                     Select Brush Color : &nbsp; 
                     <input type="color" value={colour} onChange={changeColour}/>
                 </div>

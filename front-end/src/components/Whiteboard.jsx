@@ -6,11 +6,6 @@ const Whiteboard = ({ colour, size }) => {
     let isDrawing = false;
     const socket = io.connect('http://localhost:5000');
 
-    // useEffect(() => {
-        
-    // }, [colour, size]);
-    
-
     socket.on("canvas-data", function(data){
         const interval = setInterval(function(){
             if(isDrawing) return;
