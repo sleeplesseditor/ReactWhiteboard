@@ -1,0 +1,17 @@
+{
+  "name": "react-whiteboard",
+  "version": "1.0.0",
+  "description": "An experiment in the use of Websockets with React to make a collaborative whiteboard, as inspired by Codeboard Club's [videos](https://www.youtube.com/watch?v=LZTWYdU4nKk).",
+  "main": "index.js",
+  "scripts": {
+    "server": "npm run start --prefix server",
+    "ui": "npm run start --prefix front-end",
+    "start": "concurrently \"npm run server\" \"npm run ui\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^5.3.0"
+  }
+}
