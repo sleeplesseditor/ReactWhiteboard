@@ -103,13 +103,18 @@ const Whiteboard = ({ clearCanvas, colour, setClearCanvas, size }) => {
     useEffect(() => {
         drawOnCanvas();
     }, []);
+
+    useEffect(() => {
+        resetCanvas();
+        setClearCanvas(false);
+    }, [clearCanvas === true]);
     
     return (
         <>
             <div className="sketch" id="sketch">
                 <canvas className="whiteboard" id="whiteboard" />
             </div>
-            <button type="button" onClick={resetCanvas} id="btnClear">CLEAR</button>
+            {/* <button type="button" onClick={resetCanvas} id="btnClear">CLEAR</button> */}
         </>
     )
 };

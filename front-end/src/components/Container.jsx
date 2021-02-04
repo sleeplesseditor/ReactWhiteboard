@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Whiteboard from './Whiteboard';
+import Modal from './Modal/Modal';
 
 const Container = () => {
     const [colour, setColour] = useState('#000000');
     const [size, setSize] = useState('5');
     const [clearCanvas, setClearCanvas] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     const changeColour = (params) => {
         setColour(params.target.value)
@@ -12,6 +14,10 @@ const Container = () => {
     
     const changeSize = (params) => {
         setSize(params.target.value)
+    }
+
+    const handleModalClick = () => {
+        setShowModal(false)
     }
 
     return (
@@ -33,7 +39,7 @@ const Container = () => {
                         <option> 30 </option>
                     </select>
                 </div>
-                {/* <button onClick={() => setClearCanvas(true)}>Clear Canvas</button> */}
+                <button onClick={() => setShowModal(true)}>Clear Canvas</button>
             </div>
             <div className="board-container">
                 <Whiteboard
@@ -43,6 +49,11 @@ const Container = () => {
                     size={size} 
                 />
             </div>
+            <Modal 
+                confirm={() => setClearCanvas(true)}
+                modalClosed={handleModalClick}
+                show={showModal}
+            />
         </div>
     )
 }
