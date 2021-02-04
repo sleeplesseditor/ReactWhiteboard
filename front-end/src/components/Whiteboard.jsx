@@ -25,13 +25,17 @@ const Whiteboard = ({ clearCanvas, colour, setClearCanvas, size }) => {
     })
 
     const resetCanvas = () => {
-        socket.emit("canvas-clear")
         const canvas = document.querySelector('#whiteboard');
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height); 
+        if(timeout != undefined) clearTimeout(timeout);
+        timeout = setTimeout(function(){
+            const base64ImageData = canvas.toDataURL("image/png");
+            socket.emit("canvas-clear", base64ImageData);
+        }, 1000)
     }
 
-    socket.on("canvas-clear", function() {
+    socket.on("canvas-clear", function(data) {
         const interval = setInterval(function(){
             if(isDrawing) return;
             isDrawing = true;
@@ -43,7 +47,7 @@ const Whiteboard = ({ clearCanvas, colour, setClearCanvas, size }) => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height); 
                 isDrawing = false;
             };
-            image.src = null;
+            image.src = data;
         }, 200)     
     })
 

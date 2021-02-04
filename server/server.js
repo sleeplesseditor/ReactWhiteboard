@@ -14,8 +14,8 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('canvas-data', data);
     });
 
-    socket.on('canvas-clear', () => {
-        socket.broadcast.emit('canvas-clear')
+    socket.on('canvas-clear', (data) => {
+        socket.broadcast.emit('canvas-clear', data)
     });
 })
 
