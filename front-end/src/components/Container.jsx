@@ -5,6 +5,7 @@ import Modal from './Modal/Modal';
 const Container = () => {
     const [colour, setColour] = useState('#000000');
     const [size, setSize] = useState('5');
+    const [erase, setErase] = useState(false);
     const [clearCanvas, setClearCanvas] = useState(false);
     const [showModal, setShowModal] = useState(false);
 
@@ -32,7 +33,6 @@ const Container = () => {
                     Select Brush Color : &nbsp; 
                     <input type="color" value={colour} onChange={changeColour}/>
                 </div>
-
                 <div className="brushsize-container">
                     Select Brush Size : &nbsp; 
                     <select value={size} onChange={changeSize}>
@@ -44,11 +44,13 @@ const Container = () => {
                         <option> 30 </option>
                     </select>
                 </div>
-                <button onClick={() => setShowModal(true)}>Clear Canvas</button>
+                <button className={erase ? "tools-btn-erase" : "tools-btn-off"} onClick={() => setErase(!erase)}>Eraser Mode {erase ? 'On' : 'Off'}</button>
+                <button className="tools-btn-clear" onClick={() => setShowModal(true)}>Clear Canvas</button>
             </div>
             <div className="board-container">
                 <Whiteboard
                     clearCanvas={clearCanvas}
+                    erase={erase}
                     colour={colour}
                     setClearCanvas={setClearCanvas}
                     size={size} 

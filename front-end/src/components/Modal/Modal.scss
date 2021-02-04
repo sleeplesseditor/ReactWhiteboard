@@ -60,7 +60,8 @@
                 margin-left: 1rem;
             }
 
-            &-confirm {
+            &-confirm,
+            &-erase {
                 background-color: rgb(216, 3, 3);
                 &:hover {
                     background-color: rgb(255, 21, 21);
@@ -68,13 +69,11 @@
             }
 
             &-close {
-                background-color: rgb(6, 2, 247);
+                background-color: rgb(7, 3, 216);
                 &:hover {
-                    background-color: rgb(7, 3, 216);
+                    background-color: rgb(6, 2, 247);
                 }
             }
-
-
 
             &-container {
                 display: flex;

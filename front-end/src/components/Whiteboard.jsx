@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import io from 'socket.io-client';
 
-const Whiteboard = ({ clearCanvas, colour, setClearCanvas, size }) => {
+const Whiteboard = ({ clearCanvas, colour, erase, setClearCanvas, size }) => {
     let timeout;
     let isDrawing = false;
     const socket = io.connect('http://localhost:5000');
@@ -100,6 +100,34 @@ const Whiteboard = ({ clearCanvas, colour, setClearCanvas, size }) => {
         };
     }
 
+    const eraserMode = () => {
+        const canvas = document.querySelector('#whiteboard');
+        const ctx = canvas.getContext('2d');
+        // ctx.globalCompositeOperation = 'destination-out';
+        // ctx.lineWidth = 10;
+        if(timeout != undefined) clearTimeout(timeout);
+        timeout = setTimeout(function(){
+            const base64ImageData = canvas.toDataURL("image/png");
+            socket.emit("canvas-eraser", base64ImageData);
+        }, 1000)
+    }
+
+    socket.on("canvas-eraser", function(data) {
+        const interval = setInterval(function(){
+            if(isDrawing) return;
+            isDrawing = true;
+            clearInterval(interval);
+            const image = new Image();
+            const canvas = document.querySelector('#whiteboard');
+            const ctx = canvas.getContext('2d');
+            ctx.globalCompositeOperation = 'destination-out';
+            image.onload = function() {
+                isDrawing = false;
+            };
+            image.src = data;
+        }, 200)     
+    })
+
     useEffect(() => {
         drawOnCanvas();
     }, []);
@@ -108,13 +136,21 @@ const Whiteboard = ({ clearCanvas, colour, setClearCanvas, size }) => {
         resetCanvas();
         setClearCanvas(false);
     }, [clearCanvas === true]);
+
+    useEffect(() => {
+        if (erase === true) {
+            drawOnCanvas();
+            eraserMode();
+        } else {
+            drawOnCanvas();
+        }
+    }, [erase])
     
     return (
         <>
             <div className="sketch" id="sketch">
                 <canvas className="whiteboard" id="whiteboard" />
             </div>
-            {/* <button type="button" onClick={resetCanvas} id="btnClear">CLEAR</button> */}
         </>
     )
 };
