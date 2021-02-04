@@ -4,6 +4,7 @@ import Whiteboard from './Whiteboard';
 const Container = () => {
     const [colour, setColour] = useState('#000000');
     const [size, setSize] = useState('5');
+    const [clearCanvas, setClearCanvas] = useState(false);
 
     const changeColour = (params) => {
         setColour(params.target.value)
@@ -32,9 +33,15 @@ const Container = () => {
                         <option> 30 </option>
                     </select>
                 </div>
+                {/* <button onClick={() => setClearCanvas(true)}>Clear Canvas</button> */}
             </div>
             <div className="board-container">
-                <Whiteboard colour={colour} size={size} />
+                <Whiteboard
+                    clearCanvas={clearCanvas}
+                    colour={colour}
+                    setClearCanvas={setClearCanvas}
+                    size={size} 
+                />
             </div>
         </div>
     )

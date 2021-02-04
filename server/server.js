@@ -3,7 +3,7 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http, {
     cors: {
         origin: '*',
-        methods: ["GET", "POST"],
+        methods: ["GET", "POST", "PUT", "DELETE"],
     }
 });
 
@@ -12,6 +12,10 @@ io.on('connection', (socket) => {
 
     socket.on('canvas-data', (data) => {
         socket.broadcast.emit('canvas-data', data);
+    });
+
+    socket.on('canvas-clear', () => {
+        socket.broadcast.emit('canvas-clear')
     });
 })
 

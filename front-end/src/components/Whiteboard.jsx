@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import io from 'socket.io-client';
 
-const Whiteboard = ({ colour, size }) => {
+const Whiteboard = ({ clearCanvas, colour, setClearCanvas, size }) => {
     let timeout;
     let isDrawing = false;
     const socket = io.connect('http://localhost:5000');
@@ -18,17 +18,38 @@ const Whiteboard = ({ colour, size }) => {
             ctx.lineWidth = size;
             image.onload = function() {
                 ctx.drawImage(image, 0, 0);
-
                 isDrawing = false;
             };
             image.src = data;
         }, 200)
     })
 
+    const resetCanvas = () => {
+        socket.emit("canvas-clear")
+        const canvas = document.querySelector('#whiteboard');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height); 
+    }
+
+    socket.on("canvas-clear", function() {
+        const interval = setInterval(function(){
+            if(isDrawing) return;
+            isDrawing = true;
+            clearInterval(interval);
+            const image = new Image();
+            const canvas = document.querySelector('#whiteboard');
+            const ctx = canvas.getContext('2d');
+            image.onload = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); 
+                isDrawing = false;
+            };
+            image.src = null;
+        }, 200)     
+    })
+
     const drawOnCanvas = () => {
         const canvas = document.querySelector('#whiteboard');
         const ctx = canvas.getContext('2d');
-
         const sketch = document.querySelector('#sketch');
         const sketch_style = getComputedStyle(sketch);
         canvas.width = parseInt(sketch_style.getPropertyValue('width'));
@@ -80,9 +101,12 @@ const Whiteboard = ({ colour, size }) => {
     }, []);
     
     return (
-        <div className="sketch" id="sketch">
-            <canvas className="whiteboard" id="whiteboard" />
-        </div>
+        <>
+            <div className="sketch" id="sketch">
+                <canvas className="whiteboard" id="whiteboard" />
+            </div>
+            <button type="button" onClick={resetCanvas} id="btnClear">CLEAR</button>
+        </>
     )
 };
 
