@@ -17,7 +17,12 @@ const Container = () => {
     }
 
     const handleModalClick = () => {
-        setShowModal(false)
+        setShowModal(false);
+    }
+
+    const handleModalConfirm = () => {
+        setClearCanvas(true);
+        setShowModal(false);
     }
 
     return (
@@ -50,7 +55,7 @@ const Container = () => {
                 />
             </div>
             <Modal 
-                confirm={() => setClearCanvas(true)}
+                confirm={handleModalConfirm}
                 modalClosed={handleModalClick}
                 show={showModal}
             />
