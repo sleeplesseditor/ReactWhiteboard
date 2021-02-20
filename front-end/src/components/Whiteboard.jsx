@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import io from 'socket.io-client';
 
-const Whiteboard = ({ clearCanvas, colour, erase, setClearCanvas, size }) => {
+const Whiteboard = ({ clearCanvas, colour, erase, grid, setClearCanvas, size }) => {
     let timeout;
     let isDrawing = false;
     const socket = io.connect('http://localhost:5000');
@@ -112,12 +112,10 @@ const Whiteboard = ({ clearCanvas, colour, erase, setClearCanvas, size }) => {
 
         canvas.addEventListener('mousedown', function(e) {
             canvas.addEventListener('mousemove', onPaint, false);
-            drawGrid();
         }, false);
 
         canvas.addEventListener('mouseup', function() {
             canvas.removeEventListener('mousemove', onPaint, false);
-            drawGrid();
         }, false);
 
         const onPaint = function() {
@@ -183,7 +181,7 @@ const Whiteboard = ({ clearCanvas, colour, erase, setClearCanvas, size }) => {
 
     useEffect(() => {
         drawGrid();
-    }, [canvas]);
+    }, [grid === true]);
     
     return (
         <>

@@ -8,6 +8,7 @@ const Container = () => {
     const [erase, setErase] = useState(false);
     const [clearCanvas, setClearCanvas] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [gridMode, setGridMode] = useState(false);
 
     const changeColour = (params) => {
         setColour(params.target.value)
@@ -45,12 +46,14 @@ const Container = () => {
                     </select>
                 </div>
                 <button className={erase ? "tools-btn-erase" : "tools-btn-off"} onClick={() => setErase(!erase)}>Eraser Mode {erase ? 'On' : 'Off'}</button>
+                <button className={gridMode ? "tools-btn-erase" : "tools-btn-off"} onClick={() => setGridMode(true)}>Grid Mode {gridMode ? 'On' : 'Off'}</button>
                 <button className="tools-btn-clear" onClick={() => setShowModal(true)}>Clear Canvas</button>
             </div>
             <div className="board-container">
                 <Whiteboard
                     clearCanvas={clearCanvas}
                     erase={erase}
+                    grid={gridMode}
                     colour={colour}
                     setClearCanvas={setClearCanvas}
                     size={size} 
