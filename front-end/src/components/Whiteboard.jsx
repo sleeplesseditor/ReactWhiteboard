@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-str */
 import React, { useEffect } from 'react';
 import io from 'socket.io-client';
 
@@ -5,6 +6,38 @@ const Whiteboard = ({ clearCanvas, colour, erase, setClearCanvas, size }) => {
     let timeout;
     let isDrawing = false;
     const socket = io.connect('http://localhost:5000');
+
+    const canvas = document.querySelector('#whiteboard');
+
+    const drawGrid = () => {
+        const canvas = document.querySelector('#whiteboard');
+        const ctx = canvas.getContext('2d');
+
+        const data = '<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"> \
+            <defs> \
+                <pattern id="smallGrid" width="24" height="24" patternUnits="userSpaceOnUse"> \
+                    <path d="M 24 0 L 0 0 0 24" fill="none" stroke="gray" stroke-width="0.5" /> \
+                </pattern> \
+                <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse"> \
+                    <rect width="80" height="80" fill="url(#smallGrid)" /> \
+                    <path d="M 80 0 L 0 0 0 80" fill="none" stroke="gray" stroke-width="1" /> \
+                </pattern> \
+            </defs> \
+            <rect width="100%" height="100%" fill="url(#smallGrid)" /> \
+        </svg>';
+    
+        const DOMURL = window.URL || window.webkitURL || window;
+        
+        const img = new Image();
+        const svg = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+        const url = DOMURL.createObjectURL(svg);
+        
+        img.onload = function () {
+            ctx.drawImage(img, 0, 0);
+            DOMURL.revokeObjectURL(url);
+        }
+        img.src = url;
+    }
 
     socket.on("canvas-data", function(data){
         const interval = setInterval(function(){
@@ -48,8 +81,8 @@ const Whiteboard = ({ clearCanvas, colour, erase, setClearCanvas, size }) => {
                 isDrawing = false;
             };
             image.src = data;
-        }, 200)     
-    })
+        }, 200)
+    });
 
     const drawOnCanvas = () => {
         const canvas = document.querySelector('#whiteboard');
@@ -79,10 +112,12 @@ const Whiteboard = ({ clearCanvas, colour, erase, setClearCanvas, size }) => {
 
         canvas.addEventListener('mousedown', function(e) {
             canvas.addEventListener('mousemove', onPaint, false);
+            drawGrid();
         }, false);
 
         canvas.addEventListener('mouseup', function() {
             canvas.removeEventListener('mousemove', onPaint, false);
+            drawGrid();
         }, false);
 
         const onPaint = function() {
@@ -144,7 +179,11 @@ const Whiteboard = ({ clearCanvas, colour, erase, setClearCanvas, size }) => {
         } else {
             drawOnCanvas();
         }
-    }, [erase])
+    }, [erase]);
+
+    useEffect(() => {
+        drawGrid();
+    }, [canvas]);
     
     return (
         <>
