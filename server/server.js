@@ -21,6 +21,10 @@ io.on('connection', (socket) => {
     socket.on('canvas-eraser', (data) => {
         socket.broadcast.emit('canvas-eraser', data)
     });
+
+    socket.on('canvas-grid', (data) => {
+        socket.broadcast.emit('canvas-grid', data)
+    });
 })
 
 const server_port = process.env.YOUR_PORT || process.env.PORT || 5000;

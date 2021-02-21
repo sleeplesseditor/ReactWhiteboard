@@ -7,16 +7,18 @@ const Whiteboard = ({ clearCanvas, colour, erase, grid, setClearCanvas, size }) 
     let isDrawing = false;
     const socket = io.connect('http://localhost:5000');
 
-    const canvas = document.querySelector('#whiteboard');
-
     const drawGrid = () => {
-        const canvas = document.querySelector('#whiteboard');
+        const canvas = document.querySelector('#grid');
         const ctx = canvas.getContext('2d');
+        const sketch = document.querySelector('#sketch');
+        const sketch_style = getComputedStyle(sketch);
+        canvas.width = parseInt(sketch_style.getPropertyValue('width'));
+        canvas.height = parseInt(sketch_style.getPropertyValue('height'));
 
         const data = '<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"> \
             <defs> \
-                <pattern id="smallGrid" width="24" height="24" patternUnits="userSpaceOnUse"> \
-                    <path d="M 24 0 L 0 0 0 24" fill="none" stroke="gray" stroke-width="0.5" /> \
+                <pattern id="smallGrid" width="24.5" height="24.5" patternUnits="userSpaceOnUse"> \
+                    <path d="M 24.5 0 L 0 0 0 24.5" fill="none" stroke="gray" stroke-width="0.5" /> \
                 </pattern> \
                 <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse"> \
                     <rect width="80" height="80" fill="url(#smallGrid)" /> \
@@ -37,6 +39,12 @@ const Whiteboard = ({ clearCanvas, colour, erase, grid, setClearCanvas, size }) 
             DOMURL.revokeObjectURL(url);
         }
         img.src = url;
+
+        if(timeout != undefined) clearTimeout(timeout);
+            timeout = setTimeout(function(){
+                const base64ImageData = canvas.toDataURL("image/png");
+                socket.emit("canvas-grid", base64ImageData);
+        }, 1000)
     }
 
     socket.on("canvas-data", function(data){
@@ -159,11 +167,33 @@ const Whiteboard = ({ clearCanvas, colour, erase, grid, setClearCanvas, size }) 
             };
             image.src = data;
         }, 200)     
-    })
+    });
+
+    socket.on("canvas-grid", function(data) {
+        const interval = setInterval(function(){
+            if(isDrawing) return;
+            isDrawing = true;
+            clearInterval(interval);
+            const image = new Image();
+            const canvas = document.querySelector('#whiteboard');
+            const ctx = canvas.getContext('2d');
+            image.onload = function() {
+                ctx.drawImage(image, 0, 0);
+                isDrawing = false;
+            };
+            image.src = data;
+        }, 200)    
+    });
 
     useEffect(() => {
         drawOnCanvas();
     }, []);
+
+    useEffect(() => {
+       if(grid) {
+        drawGrid();
+       }
+    }, [grid])
 
     useEffect(() => {
         resetCanvas();
@@ -178,15 +208,12 @@ const Whiteboard = ({ clearCanvas, colour, erase, grid, setClearCanvas, size }) 
             drawOnCanvas();
         }
     }, [erase]);
-
-    useEffect(() => {
-        drawGrid();
-    }, [grid === true]);
     
     return (
         <>
             <div className="sketch" id="sketch">
-                <canvas className="whiteboard" id="whiteboard" />
+                <canvas className={grid ? 'whiteboard-grid': 'whiteboard-top'} id="whiteboard" />
+                <canvas className="whiteboard-back" id="grid" />
             </div>
         </>
     )

@@ -8,7 +8,7 @@ const Container = () => {
     const [erase, setErase] = useState(false);
     const [clearCanvas, setClearCanvas] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [gridMode, setGridMode] = useState(false);
+    const [gridMode, setGridMode] = useState(true);
 
     const changeColour = (params) => {
         setColour(params.target.value)
@@ -24,6 +24,7 @@ const Container = () => {
 
     const handleModalConfirm = () => {
         setClearCanvas(true);
+        setGridMode(false);
         setShowModal(false);
     }
 
@@ -32,7 +33,7 @@ const Container = () => {
             <div className="tools-section">
                 <div className="colour-picker-container">
                     Select Brush Color : &nbsp; 
-                    <input type="color" value={colour} onChange={changeColour}/>
+                    <input aria-label="colour-select" type="color" value={colour} onChange={changeColour}/>
                 </div>
                 <div className="brushsize-container">
                     Select Brush Size : &nbsp; 
@@ -46,7 +47,7 @@ const Container = () => {
                     </select>
                 </div>
                 <button className={erase ? "tools-btn-erase" : "tools-btn-off"} onClick={() => setErase(!erase)}>Eraser Mode {erase ? 'On' : 'Off'}</button>
-                <button className={gridMode ? "tools-btn-erase" : "tools-btn-off"} onClick={() => setGridMode(true)}>Grid Mode {gridMode ? 'On' : 'Off'}</button>
+                <button className={gridMode ? "tools-btn-erase" : "tools-btn-off"} onClick={() => setGridMode(!gridMode)}>Grid Mode {gridMode ? 'On' : 'Off'}</button>
                 <button className="tools-btn-clear" onClick={() => setShowModal(true)}>Clear Canvas</button>
             </div>
             <div className="board-container">
