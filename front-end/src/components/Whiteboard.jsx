@@ -187,13 +187,8 @@ const Whiteboard = ({ clearCanvas, colour, erase, grid, setClearCanvas, size }) 
 
     useEffect(() => {
         drawOnCanvas();
-    }, []);
-
-    useEffect(() => {
-       if(grid) {
         drawGrid();
-       }
-    }, [grid])
+    }, []);
 
     useEffect(() => {
         resetCanvas();
