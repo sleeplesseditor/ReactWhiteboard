@@ -40,11 +40,13 @@ const Whiteboard = ({ clearCanvas, colour, erase, grid, setClearCanvas, size }) 
         }
         img.src = url;
 
-        if(timeout != undefined) clearTimeout(timeout);
-            timeout = setTimeout(function(){
-                const base64ImageData = canvas.toDataURL("image/png");
-                socket.emit("canvas-grid", base64ImageData);
-        }, 1000)
+        // if(timeout != undefined) clearTimeout(timeout);
+        //     timeout = setTimeout(function(){
+        //         const base64ImageData = canvas.toDataURL("image/png");
+        //         socket.emit("canvas-grid", base64ImageData);
+        // }, 1000)
+        const base64ImageData = canvas.toDataURL("image/png");
+        socket.emit("canvas-grid", base64ImageData);
     }
 
     socket.on("canvas-data", function(data){
@@ -70,10 +72,12 @@ const Whiteboard = ({ clearCanvas, colour, erase, grid, setClearCanvas, size }) 
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height); 
         if(timeout != undefined) clearTimeout(timeout);
-        timeout = setTimeout(function(){
-            const base64ImageData = canvas.toDataURL("image/png");
-            socket.emit("canvas-clear", base64ImageData);
-        }, 1000)
+        // timeout = setTimeout(function(){
+        //     const base64ImageData = canvas.toDataURL("image/png");
+        //     socket.emit("canvas-clear", base64ImageData);
+        // }, 1000)
+        const base64ImageData = canvas.toDataURL("image/png");
+        socket.emit("canvas-clear", base64ImageData);
     }
 
     socket.on("canvas-clear", function(data) {
@@ -84,10 +88,12 @@ const Whiteboard = ({ clearCanvas, colour, erase, grid, setClearCanvas, size }) 
             const image = new Image();
             const canvas = document.querySelector('#whiteboard');
             const ctx = canvas.getContext('2d');
-            image.onload = function() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height); 
-                isDrawing = false;
-            };
+            // image.onload = function() {
+            //     ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            //     isDrawing = false;
+            // };
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            isDrawing = false;
             image.src = data;
         }, 200)
     });
@@ -134,10 +140,12 @@ const Whiteboard = ({ clearCanvas, colour, erase, grid, setClearCanvas, size }) 
             ctx.stroke();
 
             if(timeout != undefined) clearTimeout(timeout);
-            timeout = setTimeout(function(){
-                const base64ImageData = canvas.toDataURL("image/png");
-                socket.emit("canvas-data", base64ImageData);
-            }, 1000)
+            // timeout = setTimeout(function(){
+            //     const base64ImageData = canvas.toDataURL("image/png");
+            //     socket.emit("canvas-data", base64ImageData);
+            // }, 1000)
+            const base64ImageData = canvas.toDataURL("image/png");
+            socket.emit("canvas-data", base64ImageData);
         };
     }
 
@@ -147,10 +155,12 @@ const Whiteboard = ({ clearCanvas, colour, erase, grid, setClearCanvas, size }) 
         // ctx.globalCompositeOperation = 'destination-out';
         // ctx.lineWidth = 10;
         if(timeout != undefined) clearTimeout(timeout);
-        timeout = setTimeout(function(){
-            const base64ImageData = canvas.toDataURL("image/png");
-            socket.emit("canvas-eraser", base64ImageData);
-        }, 1000)
+        // timeout = setTimeout(function(){
+        //     const base64ImageData = canvas.toDataURL("image/png");
+        //     socket.emit("canvas-eraser", base64ImageData);
+        // }, 1000)
+        const base64ImageData = canvas.toDataURL("image/png");
+        socket.emit("canvas-eraser", base64ImageData);
     }
 
     socket.on("canvas-eraser", function(data) {
